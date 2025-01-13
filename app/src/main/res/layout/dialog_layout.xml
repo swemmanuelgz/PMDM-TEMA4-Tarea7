@@ -1,0 +1,50 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Spinner para las asignaturas -->
+    <Spinner
+        android:id="@+id/spnDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
+
+    <!-- Campo de texto para la fecha -->
+    <EditText
+        android:id="@+id/txtAsignaturaDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Asignatura"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/txtFechaDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Selecciona una fecha"
+        android:focusable="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Aceptar" />
+
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancelar" />
+    </LinearLayout>
+
+</LinearLayout>
