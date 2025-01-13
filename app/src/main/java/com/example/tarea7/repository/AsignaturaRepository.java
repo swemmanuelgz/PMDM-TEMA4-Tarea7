@@ -22,4 +22,8 @@ public class AsignaturaRepository {
     public void addTarea(Asignatura asignatura) {
         tareas.add(asignatura);
     }
+
+    public void deleteTarea(Asignatura asignatura) {
+        tareas.remove(asignatura);
+    }
 }
