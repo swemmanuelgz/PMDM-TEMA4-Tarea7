@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.tarea7.MainActivity;
 import com.example.tarea7.R;
 import com.example.tarea7.model.Asignatura;
 
@@ -44,6 +45,12 @@ public class TareaAdapters extends RecyclerView.Adapter<TareaAdapters.TareaViewH
         holder.txtNombre.setText(asignatura.getNombre());
         holder.txtFecha.setText(asignatura.getFecha());
         holder.txtEstado.setText(asignatura.isEstado() ? "Completada" : "Pendiente");
+
+        holder.itemView.setOnClickListener(v -> {
+           if (context instanceof MainActivity) {
+               ((MainActivity) context).showBottomSheetDialog(asignatura);
+           }
+        });
     }
 
     @Override

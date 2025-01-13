@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(getSupportFragmentManager(), "dialog");
     }
     //Metodo donde se muestra un BottomSheetDialog cuando se pulsa en un item del recyclerView
-    public void showBottomSheetDialog() {
+    public void showBottomSheetDialog(Asignatura asignatura) {
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet, null);
         //Encontramos las vistas
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
         txtDelete.setOnClickListener(v -> {
+            deleteAsignatura(asignatura);
             Log.d("MainActivity", "Eliminando tarea");
             bottomSheetDialog.dismiss();
         });
