@@ -1,5 +1,8 @@
 package com.example.tarea7;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tarea7.adapters.TareaAdapters;
 import com.example.tarea7.model.Asignatura;
 import com.example.tarea7.repository.AsignaturaRepository;
+import com.example.tarea7.repository.BaseDeDatos;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +38,43 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        //Base de datos en modo escritura
+        SQLiteDatabase bdWrite = new BaseDeDatos(this).getWritableDatabase();
+
+        //Insertamos un usuario mediante sentencia SQL (no seguro)
+        String usuario = "emmanuel";
+        String email = "zundercoc@gmail.com";
+        String password = "abc123.";
+        String consulta = "INSERT INTO usuarios (nombre, email, password) VALUES ('" +
+                usuario +
+                "', '" +
+                email +
+                "', '" +
+                password +
+                "')";
+        bdWrite.execSQL(consulta);
+
+        //Insertamos un usuario mediante ContentValues
+        ContentValues valores = new ContentValues();
+        valores.put("nombre", usuario);
+        valores.put("email", email);
+        valores.put("password", password);
+        bdWrite.insert("usuarios", null, valores);
+
+        //REcorrer nombres
+        SQLiteDatabase bdRead = new BaseDeDatos(this).getReadableDatabase();
+
+        String consulta2 = "SELECT nombre FROM usuarios WHERE nombre NOT LIKE 'm%'";
+        Cursor cursor = bdRead.rawQuery(consulta2, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String nombre = cursor.getString(0);
+                Log.d("MainActivity", "Nombre: " + nombre);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        bdWrite.close();
 
         Button btnShowDialog = findViewById(R.id.btnAgregar);
         btnShowDialog.setOnClickListener(v -> showDialog());
