@@ -12,6 +12,10 @@ public class AsignaturaRepository {
     public AsignaturaRepository() {
     }
 
+    public void setTareas(ArrayList<Asignatura> tareas) {
+        this.tareas = tareas;
+    }
+
     public ArrayList<Asignatura> getTareas() {
         //Vemos las asignaturas en la lista con un for y sout
         for (Asignatura asignatura : tareas) {

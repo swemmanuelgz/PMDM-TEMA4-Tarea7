@@ -3,6 +3,7 @@ package com.example.tarea7.model;
 import java.sql.Date;
 
 public class Asignatura {
+    private int id;
     private String nombre;
     private String fecha;
     private boolean estado;
@@ -12,6 +13,14 @@ public class Asignatura {
         this.fecha = fecha;
         this.estado = estado;
     }
+
+    public Asignatura(int id, String nombre, String fecha, boolean estado) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fecha = fecha;
+        this.estado = estado;
+    }
+
     public Asignatura() {
 
     }
@@ -40,10 +49,19 @@ public class Asignatura {
         this.estado = estado;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Asignatura{" +
-                "nombre='" + nombre + '\'' +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
                 ", fecha='" + fecha + '\'' +
                 ", estado=" + estado +
                 '}';

@@ -28,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class MainActivity extends AppCompatActivity {
     private AsignaturaRepository asignaturaRepository = new AsignaturaRepository();
     private TareaAdapters tareaAdapters;
+    private BaseDeDatos baseDeDatos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,43 +39,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
-        //Base de datos en modo escritura
-        SQLiteDatabase bdWrite = new BaseDeDatos(this).getWritableDatabase();
-
-        //Insertamos un usuario mediante sentencia SQL (no seguro)
-        String usuario = "emmanuel";
-        String email = "zundercoc@gmail.com";
-        String password = "abc123.";
-        String consulta = "INSERT INTO usuarios (nombre, email, password) VALUES ('" +
-                usuario +
-                "', '" +
-                email +
-                "', '" +
-                password +
-                "')";
-        bdWrite.execSQL(consulta);
-
-        //Insertamos un usuario mediante ContentValues
-        ContentValues valores = new ContentValues();
-        valores.put("nombre", usuario);
-        valores.put("email", email);
-        valores.put("password", password);
-        bdWrite.insert("usuarios", null, valores);
-
-        //REcorrer nombres
-        SQLiteDatabase bdRead = new BaseDeDatos(this).getReadableDatabase();
-
-        String consulta2 = "SELECT nombre FROM usuarios WHERE nombre NOT LIKE 'm%'";
-        Cursor cursor = bdRead.rawQuery(consulta2, null);
-        if (cursor.moveToFirst()) {
-            do {
-                String nombre = cursor.getString(0);
-                Log.d("MainActivity", "Nombre: " + nombre);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        bdWrite.close();
+        //Inizializamos la base de datos
+         baseDeDatos = new BaseDeDatos(this);
+        //cargar las tareas de la base de datos
+        asignaturaRepository.setTareas(baseDeDatos.obtenerTareas());
 
         Button btnShowDialog = findViewById(R.id.btnAgregar);
         btnShowDialog.setOnClickListener(v -> showDialog());
@@ -94,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerAsignaturas);
         dialog.setOnDialogSubmitListener(asignatura -> {
             Log.d("MainActivity", "Asignatura recibida: " + asignatura.getNombre());
+            baseDeDatos.insertarTarea(asignatura);
             asignaturaRepository.addTarea(asignatura);
             tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
             Log.d("MainActivity", "Asignaturas en repositorio despues de agregar: " + asignaturaRepository.getTareas().toString());
@@ -122,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
         });
         txtComplete.setOnClickListener(v -> {
             Log.d("MainActivity", "Completando tarea");
+            baseDeDatos.actualizarTarea(asignatura);
+            tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
+            Log.d("MainActivity", "Asignaturas en repositorio despues de completar: " + asignaturaRepository.getTareas().toString());
             bottomSheetDialog.dismiss();
         });
 
@@ -131,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //metodo que coge el objeto asignatura y lo borra de la lista
     public void deleteAsignatura(Asignatura asignatura) {
-        asignaturaRepository.deleteTarea(asignatura);
+        baseDeDatos.eliminarTarea(asignatura);
         tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
     }
 
