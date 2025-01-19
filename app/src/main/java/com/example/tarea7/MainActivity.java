@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Configuramos los eventos de los botones
         txtEdit.setOnClickListener(v -> {
+            editAsignatura(asignatura);
             Log.d("MainActivity", "Editando tarea");
             bottomSheetDialog.dismiss();
         });
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
         txtComplete.setOnClickListener(v -> {
             Log.d("MainActivity", "Completando tarea");
+            asignatura.setEstado(true);
             baseDeDatos.actualizarTarea(asignatura);
             tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
             Log.d("MainActivity", "Asignaturas en repositorio despues de completar: " + asignaturaRepository.getTareas().toString());
@@ -104,7 +106,32 @@ public class MainActivity extends AppCompatActivity {
     //metodo que coge el objeto asignatura y lo borra de la lista
     public void deleteAsignatura(Asignatura asignatura) {
         baseDeDatos.eliminarTarea(asignatura);
+        asignaturaRepository.deleteTarea(asignatura);
         tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
     }
+    //metodo que coge el objeto asignatura y lo edita
+    public void editAsignatura(Asignatura asignatura) {
+        CustomDialogFrgamnet dialog = new CustomDialogFrgamnet();
+        dialog.setOnDialogSubmitListener(asignatura1 -> {
+            Log.d("MainActivity", "Asignatura recibida: " + asignatura1.getNombre());
+            baseDeDatos.actualizarTarea(asignatura1);
+            asignaturaRepository.updateTarea(asignatura1);
+            tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
+            Log.d("MainActivity", "Asignaturas en repositorio despues de editar: " + asignaturaRepository.getTareas().toString());
+            dialog.dismiss();
+        });
 
+        Bundle args = new Bundle();
+        args.putInt("id", asignatura.getId());
+        args.putString("nombre", asignatura.getNombre());
+        args.putString("fecha", asignatura.getFecha());
+        args.putBoolean("estado", asignatura.isEstado());
+        dialog.setArguments(args);
+        dialog.show(getSupportFragmentManager(), "dialog");
+    }
+
+
+    public AsignaturaRepository getAsignaturaRepository() {
+        return asignaturaRepository;
+    }
 }

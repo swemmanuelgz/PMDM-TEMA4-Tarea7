@@ -30,4 +30,15 @@ public class AsignaturaRepository {
     public void deleteTarea(Asignatura asignatura) {
         tareas.remove(asignatura);
     }
+
+    //Metodo para actualizar una tarea
+    public void updateTarea(Asignatura asignatura) {
+        for (Asignatura tarea : tareas) {
+            if (tarea.getId() == asignatura.getId()) {
+                tarea.setNombre(asignatura.getNombre());
+                tarea.setFecha(asignatura.getFecha());
+                tarea.setEstado(asignatura.isEstado());
+            }
+        }
+    }
 }

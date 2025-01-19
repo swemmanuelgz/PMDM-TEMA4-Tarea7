@@ -56,11 +56,13 @@ public class BaseDeDatos extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 //Obtenemos los datos de la fila actual
+                int id = cursor.getInt(0);
                 String asignatura = cursor.getString(1);
                 String fecha = cursor.getString(2);
                 boolean estado = cursor.getInt(3) == 1;
                 //Creamos un objeto de tipo Asignatura
                 Asignatura tarea = new Asignatura(asignatura, fecha, estado);
+                tarea.setId(id);
                 //Añadimos la tarea a la lista
                 tareas.add(tarea);
             } while (cursor.moveToNext());
