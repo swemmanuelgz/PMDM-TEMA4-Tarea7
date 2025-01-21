@@ -103,6 +103,7 @@ public class CustomDialogFrgamnet extends DialogFragment {
             }
             dismiss();
         });
+        btnCancelar.setOnClickListener(v -> dismiss());
 
         return view;
     }

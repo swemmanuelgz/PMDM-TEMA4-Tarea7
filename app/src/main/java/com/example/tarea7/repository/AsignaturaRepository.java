@@ -41,4 +41,26 @@ public class AsignaturaRepository {
             }
         }
     }
+    //Metodo para marcar la tarea como completada
+    public void updateTareaEstado(Asignatura asignatura) {
+        for (Asignatura tarea : tareas) {
+            if (tarea.getNombre().equals(asignatura.getNombre()) && tarea.getFecha().equals(asignatura.getFecha())) {
+                if (tarea.isEstado()){
+                    tarea.setEstado(false);
+                }
+                tarea.setEstado(true);
+
+            }
+        }
+    }
+    //Metodo para actualizar la tarea donde recibe la tarea a modificar y la tarea modificada con un hashmap
+    public void updateTarea(Asignatura asignatura, Asignatura asignaturaModificada) {
+        for (Asignatura tarea : tareas) {
+            if (tarea.getNombre().equals(asignatura.getNombre())) {
+                tarea.setNombre(asignaturaModificada.getNombre());
+                tarea.setFecha(asignaturaModificada.getFecha());
+                tarea.setEstado(asignaturaModificada.isEstado());
+            }
+        }
+    }
 }
