@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.tarea7.model.Asignatura;
 
@@ -86,6 +87,7 @@ public class BaseDeDatos extends SQLiteOpenHelper {
     public void eliminarTarea(Asignatura asignatura) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("tareas", "id = ?", new String[]{String.valueOf(asignatura.getId())});
+        Log.d("BaseDeDatos", "Tarea eliminada: " + asignatura.toString());
         db.close();
     }
 

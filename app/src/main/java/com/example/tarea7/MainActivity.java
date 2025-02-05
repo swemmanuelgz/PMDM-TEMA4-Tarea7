@@ -1,8 +1,5 @@
 package com.example.tarea7;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,7 +8,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tarea7.adapters.TareaAdapters;
+import com.example.tarea7.fragments.CustomDialogFrgamnet;
 import com.example.tarea7.model.Asignatura;
 import com.example.tarea7.repository.AsignaturaRepository;
 import com.example.tarea7.repository.BaseDeDatos;
@@ -29,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private AsignaturaRepository asignaturaRepository = new AsignaturaRepository();
     private TareaAdapters tareaAdapters;
     private BaseDeDatos baseDeDatos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

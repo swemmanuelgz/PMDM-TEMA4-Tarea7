@@ -1,4 +1,4 @@
-package com.example.tarea7;
+package com.example.tarea7.fragments;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
@@ -16,11 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.tarea7.R;
 import com.example.tarea7.model.Asignatura;
 import com.example.tarea7.repository.AsignaturaRepository;
 import com.example.tarea7.repository.BaseDeDatos;
 
-import java.sql.Date;
 import java.util.Calendar;
 
 public class CustomDialogFrgamnet extends DialogFragment {
