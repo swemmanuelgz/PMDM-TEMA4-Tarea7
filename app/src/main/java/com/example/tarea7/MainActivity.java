@@ -12,20 +12,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tarea7.adapters.TareaAdapters;
 import com.example.tarea7.fragments.CustomDialogFrgamnet;
 import com.example.tarea7.model.Asignatura;
+import com.example.tarea7.model.AsignaturaViewModel;
 import com.example.tarea7.repository.AsignaturaRepository;
 import com.example.tarea7.repository.BaseDeDatos;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private AsignaturaRepository asignaturaRepository = new AsignaturaRepository();
     private TareaAdapters tareaAdapters;
     private BaseDeDatos baseDeDatos;
+
+    private AsignaturaViewModel asignaturaViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +44,24 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        //Inizializamos la base de datos
-         baseDeDatos = new BaseDeDatos(this);
-        //cargar las tareas de la base de datos
-        asignaturaRepository.setTareas(baseDeDatos.obtenerTareas());
 
-        Button btnShowDialog = findViewById(R.id.btnAgregar);
-        btnShowDialog.setOnClickListener(v -> showDialog());
+        //Inicializamos el view model
+        asignaturaViewModel = new ViewModelProvider(this).get(AsignaturaViewModel.class);
 
-        //Configuramos recyclerView y adapter
+        //Recycler View
         RecyclerView recyclerView = findViewById(R.id.recyclerAsignaturas);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        tareaAdapters = new TareaAdapters(asignaturaRepository.getTareas(), this);
+        tareaAdapters = new TareaAdapters(new ArrayList<>(), this);
         recyclerView.setAdapter(tareaAdapters);
+
+        //listener para el boton de añadir tarea
+        asignaturaViewModel.getAsignaturas().observe(this, asignaturas -> {
+            tareaAdapters.updateAsignaturas(asignaturas);
+        });
+
+        Button btnShowDialog = findViewById(R.id.btnAgregar);
+
+        btnShowDialog.setOnClickListener(v -> showDialog());
 
 
 
@@ -57,13 +69,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void showDialog() {
         CustomDialogFrgamnet dialog = new CustomDialogFrgamnet();
-        RecyclerView recyclerView = findViewById(R.id.recyclerAsignaturas);
         dialog.setOnDialogSubmitListener(asignatura -> {
             Log.d("MainActivity", "Asignatura recibida: " + asignatura.getNombre());
-            baseDeDatos.insertarTarea(asignatura);
-            asignaturaRepository.addTarea(asignatura);
-            tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
-            Log.d("MainActivity", "Asignaturas en repositorio despues de agregar: " + asignaturaRepository.getTareas().toString());
+            asignaturaViewModel.addAsignatura(asignatura);
             dialog.dismiss();
         });
         dialog.show(getSupportFragmentManager(), "dialog");
@@ -84,15 +92,14 @@ public class MainActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
         txtDelete.setOnClickListener(v -> {
-            deleteAsignatura(asignatura);
+            asignaturaViewModel.deleteAsignatura(asignatura);
             Log.d("MainActivity", "Eliminando tarea");
             bottomSheetDialog.dismiss();
         });
         txtComplete.setOnClickListener(v -> {
             Log.d("MainActivity", "Completando tarea");
             asignatura.setEstado(true);
-            baseDeDatos.actualizarTarea(asignatura);
-            tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
+            asignaturaViewModel.updateAsignatura(asignatura);
             Log.d("MainActivity", "Asignaturas en repositorio despues de completar: " + asignaturaRepository.getTareas().toString());
             bottomSheetDialog.dismiss();
         });
@@ -112,9 +119,7 @@ public class MainActivity extends AppCompatActivity {
         CustomDialogFrgamnet dialog = new CustomDialogFrgamnet();
         dialog.setOnDialogSubmitListener(asignatura1 -> {
             Log.d("MainActivity", "Asignatura recibida: " + asignatura1.getNombre());
-            baseDeDatos.actualizarTarea(asignatura1);
-            asignaturaRepository.updateTarea(asignatura1);
-            tareaAdapters.updateAsignaturas(asignaturaRepository.getTareas());
+           asignaturaViewModel.updateAsignatura(asignatura1);
             Log.d("MainActivity", "Asignaturas en repositorio despues de editar: " + asignaturaRepository.getTareas().toString());
             dialog.dismiss();
         });
